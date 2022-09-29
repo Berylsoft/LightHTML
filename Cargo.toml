@@ -1,0 +1,11 @@
+[package]
+name = "lighthtml"
+version = "0.1.0"
+edition = "2021"
+authors = ["stackinspector"]
+license = "MPL-2.0"
+repository = "https://github.com/Berylsoft/lighthtml"
+
+[lib]
+name = "lighthtml"
+path = "lib.rs"
