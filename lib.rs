@@ -1,10 +1,15 @@
+use std::borrow::Cow;
+
+#[derive(Clone, Debug)]
 pub enum Node<'a> {
-    Text(&'a str),
-    Element(ElementTag, Vec<(AttrKey, &'a str)>, Vec<Node<'a>>)
+    Text(Cow<'a, str>),
+    Element(ElementTag, Vec<(AttrKey, Cow<'a, str>)>, Vec<Node<'a>>)
 }
 
+// #[macro_export]
 macro_rules! enum_str_impl {
     ($name:ident {$($variant:ident),*,}) => {
+        #[derive(Clone, Copy, Debug)]
         #[allow(non_camel_case_types)]
         pub enum $name {
             $($variant,)*
@@ -25,6 +30,20 @@ enum_str_impl! {
         a,
         br,
         hr,
+        div,
+        svg,
+        r#use,
+        img,
+        template,
+        span,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        i,
+        b,
+        p,
     }
 }
 
@@ -32,6 +51,12 @@ enum_str_impl! {
     AttrKey {
         href,
         src,
+        class,
+        alt,
+        target,
+        onclick,
+        id,
+        style,
     }
 }
 
@@ -68,8 +93,7 @@ impl<'a> Node<'a> {
 
         match self {
             Text(text) => {
-                // s!(text.replace("\n", "").as_ref());
-                s!(text);
+                s!(text.replace("\n", "").as_ref());
             },
             Element(tag, attrs, childs) => {
                 c!('<');
