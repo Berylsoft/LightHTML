@@ -1,9 +1,9 @@
-use std::borrow::Cow;
+pub use bytestring::ByteString;
 
 #[derive(Clone, Debug)]
-pub enum Node<'a> {
-    Text(Cow<'a, str>),
-    Element(ElementTag, Vec<(AttrKey, Cow<'a, str>)>, Vec<Node<'a>>)
+pub enum Node {
+    Text(ByteString),
+    Element(ElementTag, Vec<(AttrKey, ByteString)>, Vec<Node>)
 }
 
 // #[macro_export]
@@ -77,8 +77,8 @@ impl ElementTag {
     }
 }
 
-impl<'a> Node<'a> {
-    pub fn render(&'a self, s: &mut String) {
+impl Node {
+    pub fn render(&self, s: &mut String) {
         macro_rules! c {
             ($ch:expr) => {
                 s.push($ch);
@@ -127,13 +127,13 @@ impl<'a> Node<'a> {
 }
 
 
-pub fn render_node<'a>(node: Node<'a>) -> String {
+pub fn render_node(node: Node) -> String {
     let mut s = String::new();
     node.render(&mut s);
     s
 }
 
-pub fn render_nodes<'a>(nodes: Vec<Node<'a>>) -> String {
+pub fn render_nodes(nodes: Vec<Node>) -> String {
     let mut s = String::new();
     for node in nodes {
         node.render(&mut s);
