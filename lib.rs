@@ -130,10 +130,7 @@ impl Node {
 pub fn render_node(node: Node) -> String {
     let mut s = String::new();
     node.render(&mut s);
-    s.replace(
-        "<r#",
-        "<",
-    )
+    s.replace("<r#", "<").replace("</r#", "</")
 }
 
 pub fn render_nodes(nodes: Vec<Node>) -> String {
@@ -141,8 +138,5 @@ pub fn render_nodes(nodes: Vec<Node>) -> String {
     for node in nodes {
         node.render(&mut s);
     }
-    s.replace(
-        "<r#",
-        "<",
-    )
+    s.replace("<r#", "<").replace("</r#", "</")
 }
