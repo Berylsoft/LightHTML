@@ -8,17 +8,19 @@ pub enum Node {
 
 // #[macro_export]
 macro_rules! enum_str_impl {
-    ($name:ident {$($variant:ident),*,}) => {
+    ($name:ident {$($variant:ident)*} {$($r_use:ident)*}) => {
         #[derive(Clone, Copy, Debug)]
         #[allow(non_camel_case_types)]
         pub enum $name {
             $($variant,)*
+            $($r_use,)*
         }
 
         impl $name {
             pub fn as_str(&self) -> &'static str {
                 match self {
                     $($variant => stringify!($variant),)*
+                    $($r_use => "use",)*
                 }
             }
         }
@@ -27,36 +29,39 @@ macro_rules! enum_str_impl {
 
 enum_str_impl! {
     ElementTag {
-        a,
-        br,
-        hr,
-        div,
-        svg,
-        r#use,
-        img,
-        template,
-        span,
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        i,
-        b,
-        p,
+        a
+        br
+        hr
+        div
+        svg
+        img
+        template
+        span
+        h1
+        h2
+        h3
+        h4
+        h5
+        i
+        b
+        p
+    } {
+        r#use
     }
 }
 
 enum_str_impl! {
     AttrKey {
-        href,
-        src,
-        class,
-        alt,
-        target,
-        onclick,
-        id,
-        style,
+        href
+        src
+        class
+        alt
+        target
+        onclick
+        id
+        style
+    } {
+
     }
 }
 
@@ -130,13 +135,13 @@ impl Node {
 pub fn render_node(node: Node) -> String {
     let mut s = String::new();
     node.render(&mut s);
-    s.replace("<r#", "<").replace("</r#", "</")
+    s
 }
 
-pub fn render_nodes(nodes: Vec<Node>) -> String {
+pub fn render_nodes<I: IntoIterator<Item = Node>>(nodes: I) -> String {
     let mut s = String::new();
     for node in nodes {
         node.render(&mut s);
     }
-    s.replace("<r#", "<").replace("</r#", "</")
+    s
 }
