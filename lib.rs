@@ -1,9 +1,7 @@
-pub use bytestring::ByteString;
-
 #[derive(Clone, Debug)]
-pub enum Node {
-    Text(ByteString),
-    Element(ElementTag, Vec<(AttrKey, ByteString)>, Vec<Node>)
+pub enum Node<S> {
+    Text(S),
+    Element(ElementTag, Vec<(AttrKey, S)>, Vec<Node<S>>)
 }
 
 // #[macro_export]
@@ -82,7 +80,7 @@ impl ElementTag {
     }
 }
 
-impl Node {
+impl<S: AsRef<str>> Node<S> {
     pub fn render(&self, s: &mut String) {
         macro_rules! c {
             ($ch:expr) => {
@@ -98,7 +96,7 @@ impl Node {
 
         match self {
             Text(text) => {
-                s!(text.replace("\n", "").as_ref());
+                s!(text.as_ref().replace("\n", "").as_ref());
             },
             Element(tag, attrs, childs) => {
                 c!('<');
@@ -107,10 +105,10 @@ impl Node {
                     for (k, v) in attrs {
                         c!(' ');
                         s!(k.as_str());
-                        if v.len() != 0 {
+                        if v.as_ref().len() != 0 {
                             c!('=');
                             c!('"');
-                            s!(v);
+                            s!(v.as_ref());
                             c!('"');
                         }
                     }
@@ -132,13 +130,13 @@ impl Node {
 }
 
 
-pub fn render_node(node: Node) -> String {
+pub fn render_node<S: AsRef<str>>(node: Node<S>) -> String {
     let mut s = String::new();
     node.render(&mut s);
     s
 }
 
-pub fn render_nodes<I: IntoIterator<Item = Node>>(nodes: I) -> String {
+pub fn render_nodes<I: IntoIterator<Item = Node<S>>, S: AsRef<str>>(nodes: I) -> String {
     let mut s = String::new();
     for node in nodes {
         node.render(&mut s);

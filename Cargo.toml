@@ -7,8 +7,4 @@ license = "MPL-2.0"
 repository = "https://github.com/Berylsoft/lighthtml"
 
 [lib]
-name = "lighthtml"
 path = "lib.rs"
-
-[dependencies]
-bytestring = { version = "1", features = ["serde"] }
