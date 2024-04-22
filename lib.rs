@@ -1,13 +1,21 @@
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(untagged))]
 pub enum Node<S> {
     Text(S),
-    Element(ElementTag, Vec<(AttrKey, S)>, Vec<Node<S>>)
+    Element(
+        ElementTag,
+        #[cfg_attr(feature = "serde", serde(with = "tuple_vec_map"))]
+        Vec<(AttrKey, S)>,
+        Vec<Node<S>>,
+    )
 }
 
 // #[macro_export]
 macro_rules! enum_str_impl {
     ($name:ident {$($variant:ident)*} {$($r_use:ident)*}) => {
         #[derive(Clone, Copy, Debug)]
+        #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
         #[allow(non_camel_case_types)]
         pub enum $name {
             $($variant,)*
