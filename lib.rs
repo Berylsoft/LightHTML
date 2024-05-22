@@ -11,22 +11,29 @@ pub enum Node<S> {
     )
 }
 
+fn cvt(_variant: &'static str) -> &'static str {
+    match _variant {
+        "_use" => "use",
+        _ => unreachable!(),
+    }
+}
+
 // #[macro_export]
 macro_rules! enum_str_impl {
-    ($name:ident {$($variant:ident)*} {$($r_use:ident)*}) => {
+    ($name:ident {$($variant:ident)* $(! $_variant:ident)*}) => {
         #[derive(Clone, Copy, Debug)]
         #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
         #[allow(non_camel_case_types)]
         pub enum $name {
             $($variant,)*
-            $($r_use,)*
+            $($_variant,)*
         }
 
         impl $name {
             pub fn as_str(&self) -> &'static str {
                 match self {
-                    $($variant => stringify!($variant),)*
-                    $($r_use => "use",)*
+                    $(Self::$variant => stringify!($variant),)*
+                    $(Self::$_variant => cvt(stringify!($_variant)),)*
                 }
             }
         }
@@ -51,8 +58,7 @@ enum_str_impl! {
         i
         b
         p
-    } {
-        r#use
+        ! _use
     }
 }
 
@@ -66,8 +72,6 @@ enum_str_impl! {
         onclick
         id
         style
-    } {
-
     }
 }
 
