@@ -151,3 +151,10 @@ pub fn render_nodes<I: IntoIterator<Item = Node<S>>, S: AsRef<str>>(nodes: I) ->
     }
     s
 }
+
+#[macro_export]
+macro_rules! attr {
+    ($($k:ident: $v:expr),* $(,)?) => {
+        vec![$((lighthtml::AttrKey::$k, $v),)*]
+    };
+}
