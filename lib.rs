@@ -74,6 +74,7 @@ enum_str_impl! {
         A_REL       rel
         A_CROSSORIGIN   crossorigin
         A_INTEGRITY     integrity
+        A_LANG      lang
     }
 }
 
