@@ -11,29 +11,20 @@ pub enum Node<S> {
     )
 }
 
-fn cvt(_variant: &'static str) -> &'static str {
-    match _variant {
-        "_use" => "use",
-        _ => unreachable!(),
-    }
-}
-
 // #[macro_export]
 macro_rules! enum_str_impl {
-    ($name:ident {$($variant:ident)* $(! $_variant:ident)*}) => {
+    ($name:ident {$($variant:ident $value:tt)*}) => {
         #[derive(Clone, Copy, Debug)]
         #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
         #[allow(non_camel_case_types)]
         pub enum $name {
             $($variant,)*
-            $($_variant,)*
         }
 
         impl $name {
             pub fn as_str(&self) -> &'static str {
                 match self {
-                    $(Self::$variant => stringify!($variant),)*
-                    $(Self::$_variant => cvt(stringify!($_variant)),)*
+                    $(Self::$variant => stringify!($value),)*
                 }
             }
         }
@@ -42,36 +33,36 @@ macro_rules! enum_str_impl {
 
 enum_str_impl! {
     ElementTag {
-        a
-        br
-        hr
-        div
-        svg
-        img
-        template
-        span
-        h1
-        h2
-        h3
-        h4
-        h5
-        i
-        b
-        p
-        ! _use
+        E_A         a
+        E_BR        br
+        E_HR        hr
+        E_DIV       div
+        E_SVG       svg
+        E_IMG       img
+        E_TEMPLATE  template
+        E_SPAN      span
+        E_H1        h1
+        E_H2        h2
+        E_H3        h3
+        E_H4        h4
+        E_H5        h5
+        E_I         i
+        E_B         b
+        E_P         p
+        E_USE       use
     }
 }
 
 enum_str_impl! {
     AttrKey {
-        href
-        src
-        class
-        alt
-        target
-        onclick
-        id
-        style
+        A_HREF      href
+        A_SRC       src
+        A_CLASS     class
+        A_ALT       alt
+        A_TARGET    target
+        A_ONCLICK   onclick
+        A_ID        id
+        A_STYLE     style
     }
 }
 
@@ -86,7 +77,7 @@ use prelude::*;
 impl ElementTag {
     pub fn has_content(&self) -> bool {
         match self {
-            br | hr => false,
+            E_BR | E_HR => false,
             _ => true
         }
     }
