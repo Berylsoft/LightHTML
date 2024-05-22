@@ -50,6 +50,12 @@ enum_str_impl! {
         E_B         b
         E_P         p
         E_USE       use
+        E_HTML      html
+        E_HEAD      head
+        E_BODY      body
+        E_SCRIPT    script
+        E_STYLE     style
+        E_LINK      link
     }
 }
 
@@ -63,6 +69,9 @@ enum_str_impl! {
         A_ONCLICK   onclick
         A_ID        id
         A_STYLE     style
+        A_REL       rel
+        A_CROSSORIGIN   crossorigin
+        A_INTEGRITY     integrity
     }
 }
 
