@@ -3,6 +3,8 @@
 #[cfg_attr(feature = "serde", serde(untagged))]
 pub enum Node<S> {
     Text(S),
+    // cannot tell the difference is intended at least for now
+    Html(S),
     Element(
         ElementTag,
         #[cfg_attr(feature = "serde", serde(with = "tuple_vec_map"))]
@@ -107,7 +109,7 @@ impl<S: AsRef<str>> Node<S> {
         }
 
         match self {
-            Text(text) => {
+            Text(text) | Html(text) => {
                 s!(text.as_ref().replace("\n", "").as_ref());
             },
             Element(tag, attrs, childs) => {
